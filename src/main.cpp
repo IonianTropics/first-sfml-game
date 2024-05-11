@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 
+#include "Entity.h"
 #include "TileMap.h"
 
 
@@ -67,6 +68,11 @@ int main() {
         }
 
         knight.move(knight_velocity);
+        if (knight_velocity.x < 0.f) {
+            knight.setTextureRect(sf::IntRect(31, 0, -31, 31));
+        } else if (knight_velocity.x > 0.f) {
+            knight.setTextureRect(sf::IntRect(0, 0, 31, 31));
+        }
         knight_velocity = sf::Vector2f();
 
         window.clear();

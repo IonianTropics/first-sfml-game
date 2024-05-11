@@ -29,4 +29,4 @@ class TileMap: public sf::Drawable, public sf::Transformable {
 };
 } // namespace game
 
-#endif  // GAME_TILE_MAP_
+#endif // GAME_TILE_MAP_
