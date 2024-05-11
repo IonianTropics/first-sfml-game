@@ -1,6 +1,6 @@
 #include <SFML/Graphics.hpp>
 
-#include "Entity.h"
+#include "Knight.h"
 #include "TileMap.h"
 
 

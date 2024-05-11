@@ -1,5 +1,5 @@
-#ifndef GAME_TILE_MAP_
-#define GAME_TILE_MAP_
+#ifndef GAME_TILE_MAP_H_
+#define GAME_TILE_MAP_H_
 
 #include <SFML/Graphics.hpp>
 
@@ -29,4 +29,4 @@ class TileMap: public sf::Drawable, public sf::Transformable {
 };
 } // namespace game
 
-#endif // GAME_TILE_MAP_
+#endif // GAME_TILE_MAP_H_

@@ -1,10 +1,10 @@
-#ifndef GAME_TILE_MAP_
-#define GAME_TILE_MAP_
+#ifndef GAME_KNIGHT_H_
+#define GAME_KNIGHT_H_
 
 #include <SFML/Graphics.hpp>
 
 namespace game {
-class Entity: public sf::Drawable, public sf::Transformable {
+class Knight: public sf::Drawable, public sf::Transformable {
     public:
         
     private:
@@ -18,5 +18,4 @@ class Entity: public sf::Drawable, public sf::Transformable {
 };
 } // namespace game
 
-
-#endif // GAME_TILE_MAP_
+#endif // GAME_KNIGHT_H_
