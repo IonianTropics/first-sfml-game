@@ -1,23 +1,51 @@
 #include <SFML/Graphics.hpp>
 
+#include "TileMap.h"
+
+
 int main() {
-    auto window = sf::RenderWindow{ { 680u, 480u }, "First Game" };
+    auto window = sf::RenderWindow{ { 512u, 256u }, "First Game" };
     window.setFramerateLimit(60);
 
-    // create an array of 3 vertices that define a triangle primitive
-    sf::VertexArray triangle(sf::Triangles, 3);
+    const int background[] = {
+        144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144,
+        160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160, 160,
+        176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176,
+        176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176,
+        176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176,
+        176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176, 176,
+        192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192, 192,
+        208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208,
+        208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208,
+        208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208,
+        208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208,
+        208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208, 208,
+        224, 224, 224, 224, 224, 224, 224, 224, 224, 224, 224, 224, 224, 224, 224, 224, 224, 224, 224, 224, 224, 224, 224, 224, 224, 224, 224, 224, 224, 224, 224, 224,
+        240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240,
+        240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240,
+        240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240, 240,
+    };
 
-    // define the position of the triangle's points
-    triangle[0].position = sf::Vector2f(10.f, 10.f);
-    triangle[1].position = sf::Vector2f(100.f, 10.f);
-    triangle[2].position = sf::Vector2f(100.f, 100.f);
+    game::TileMap background_map;
+    if (!background_map.load(
+            "../../../assets/sprites/world_tileset.png",
+            sf::Vector2u(16, 16),
+            background, 
+            32, 16)
+        ) {
+        return -1;
+    }
 
-    // define the color of the triangle's points
-    triangle[0].color = sf::Color::Red;
-    triangle[1].color = sf::Color::Blue;
-    triangle[2].color = sf::Color::Green;
+    sf::Texture knight_texture;
+    if (!knight_texture.loadFromFile("../../../assets/sprites/knight.png")) {
+        return -1;
+    }
 
-    // no texture coordinates here, we'll see that later
+    sf::Sprite knight;
+    knight.setTexture(knight_texture);
+    knight.setTextureRect(sf::IntRect(0, 0, 31, 31));
+    sf::Vector2f knight_velocity = sf::Vector2f();
+    float knight_speed = 1.5f;
 
     while (window.isOpen()) {
         for (auto event = sf::Event{}; window.pollEvent(event);) {
@@ -25,11 +53,25 @@ int main() {
                 window.close();
             }
         }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
+            knight_velocity.y -= knight_speed;
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+            knight_velocity.x -= knight_speed;
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+            knight_velocity.y += knight_speed;
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+            knight_velocity.x += knight_speed;
+        }
+
+        knight.move(knight_velocity);
+        knight_velocity = sf::Vector2f();
 
         window.clear();
-
-        window.draw(triangle);
-
+        window.draw(background_map);
+        window.draw(knight);
         window.display();
     }
 }
