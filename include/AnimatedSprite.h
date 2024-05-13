@@ -19,9 +19,12 @@ class AnimatedSprite: public sf::Drawable, public sf::Transformable {
         bool flip_h;
         
         void update();
+    
         void set_animation(int start_index, int frame_count, float frame_duration);
-        void update_sprite();
-        sf::Texture _sprite_sheet;
+       
+        sf::FloatRect get_local_bounds() const;
+
+        sf::FloatRect get_global_bounds() const;
     private:
         float _frame_duration;
         int _start_index;
@@ -35,9 +38,12 @@ class AnimatedSprite: public sf::Drawable, public sf::Transformable {
         int _sprite_width;
         int _sprite_height;
         sf::Sprite _sprite;
+        sf::Texture _sprite_sheet;
 
         int _sheet_width;
         int _sheet_height;
+
+        void _update_sprite();
 
         virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const {
             states.transform *= getTransform();

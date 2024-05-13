@@ -28,7 +28,7 @@ bool AnimatedSprite::load(
     _sprite_height = sprite_height;
     _sheet_width = sheet_width;
     _sheet_height = sheet_height;
-    update_sprite();
+    _update_sprite();
     _animation_clock = sf::Clock();
     return true;
 }
@@ -39,7 +39,7 @@ void AnimatedSprite::update() {
         _sprite_index = _start_index + _animation_index;
         _animation_clock.restart();
     }
-    update_sprite();
+    _update_sprite();
 }
 
 void AnimatedSprite::set_animation(int start_index, int frame_count, float frame_duration) {
@@ -48,7 +48,15 @@ void AnimatedSprite::set_animation(int start_index, int frame_count, float frame
     _frame_duration = frame_duration;
 }
 
-void AnimatedSprite::update_sprite() {
+sf::FloatRect AnimatedSprite::get_local_bounds() const {
+    return _sprite.getLocalBounds();
+}
+
+sf::FloatRect AnimatedSprite::get_global_bounds() const {
+    return getTransform().transformRect(get_local_bounds());
+}
+
+void AnimatedSprite::_update_sprite() {
     _sprite_left = (_sprite_index % _sheet_width) * _sprite_width;
     _sprite_top = (_sprite_index / _sheet_width) * _sprite_height;
     _sprite.setTextureRect(sf::IntRect(
