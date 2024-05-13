@@ -26,6 +26,7 @@ bool Knight::load() {
     _acceleration = 1000.f;
     _gravity = 120.f;
     _jump_impulse = 120.f;
+    _terminal_velocity = 120.f;
     return true;
 }
 
@@ -57,6 +58,7 @@ void Knight::update_input() {
 void Knight::update_physics(float delta, sf::FloatRect world_rects[], int world_rect_count) {
     // TODO: add ground check
     _velocity.y += delta * _gravity;
+    _velocity.y = std::min(_velocity.y, _terminal_velocity);
 
     if (_space_just_pressed) {
         _velocity.y = -_jump_impulse;
@@ -79,16 +81,20 @@ void Knight::update_physics(float delta, sf::FloatRect world_rects[], int world_
         }
     }
 
+    // TODO add move and slide
+    // TODO add directional collision checks
     this->move(delta * _velocity);
     sf::FloatRect collision_rect = get_global_bounds();
+    sf::FloatRect intersection = sf::FloatRect();
     bool collision = false;
     for (int i = 0; i < world_rect_count; i++) {
-        if (collision_rect.intersects(world_rects[i])) {
+        if (collision_rect.intersects(world_rects[i], intersection)) {
             collision = true;
         }
     }
     if (collision) {
         this->move(-delta * _velocity);
+        _velocity = sf::Vector2f();
     }
 }
 

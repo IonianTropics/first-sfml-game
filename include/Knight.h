@@ -33,6 +33,7 @@ class Knight: public sf::Drawable, public sf::Transformable {
         float _acceleration;
         float _gravity;
         float _jump_impulse;
+        float _terminal_velocity;
 
         virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 };
