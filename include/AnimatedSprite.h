@@ -19,9 +19,9 @@ class AnimatedSprite: public sf::Drawable, public sf::Transformable {
         bool flip_h;
         
         void update();
-    
+
         void set_animation(int start_index, int frame_count, float frame_duration);
-       
+
         sf::FloatRect get_local_bounds() const;
 
         sf::FloatRect get_global_bounds() const;
@@ -45,11 +45,7 @@ class AnimatedSprite: public sf::Drawable, public sf::Transformable {
 
         void _update_sprite();
 
-        virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const {
-            states.transform *= getTransform();
-            states.texture = &_sprite_sheet;
-            target.draw(_sprite, states);
-        }
+        virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 };
 } // namespace game
 

@@ -66,4 +66,10 @@ void AnimatedSprite::_update_sprite() {
         _sprite_height
     ));
 }
+
+void AnimatedSprite::draw(sf::RenderTarget &target, sf::RenderStates states) const {
+    states.transform *= getTransform();
+    states.texture = &_sprite_sheet;
+    target.draw(_sprite, states);
+}
 } // namespace game
