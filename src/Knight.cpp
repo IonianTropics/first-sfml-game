@@ -14,13 +14,13 @@ bool Knight::load() {
     )) {
         return false;
     }
-    
+
     _direction = 0.f;
     _space_held = false;
     _space_just_pressed = false;
     _space_just_released = false;
 
-    _collision_rect = sf::FloatRect(12.f, 13.f, 8.f, 13.f); // 12 13 19 27
+    _collision_rect = sf::FloatRect(12.f, 13.f, 8.f, 13.f);
     _velocity = sf::Vector2f();
     _max_speed = 100.f;
     _acceleration = 1000.f;
@@ -107,5 +107,10 @@ sf::FloatRect Knight::get_local_bounds() {
 
 sf::FloatRect Knight::get_global_bounds() {
     return getTransform().transformRect(get_local_bounds());
+}
+
+void Knight::draw(sf::RenderTarget &target, sf::RenderStates states) const {
+    states.transform *= getTransform();
+    target.draw(_animated_sprite, states);
 }
 } // namespace game

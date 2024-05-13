@@ -34,10 +34,7 @@ class Knight: public sf::Drawable, public sf::Transformable {
         float _gravity;
         float _jump_impulse;
 
-        virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const {
-            states.transform *= getTransform();
-            target.draw(_animated_sprite, states);
-        }
+        virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 };
 } // namespace game
 
