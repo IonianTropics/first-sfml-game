@@ -15,6 +15,8 @@ file(GLOB SRCS CONFIGURE_DEPENDS "include/*.h" "src/*.cpp")
 add_executable(FirstGame ${SRCS})
 target_include_directories(FirstGame PRIVATE include)
 target_link_libraries(FirstGame PRIVATE sfml-graphics)
+target_link_libraries(FirstGame PRIVATE sfml-audio)
+target_link_libraries(FirstGame PRIVATE sfml-system)
 target_compile_features(FirstGame PRIVATE cxx_std_17)
 
 if(WIN32)

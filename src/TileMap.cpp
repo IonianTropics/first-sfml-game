@@ -11,13 +11,13 @@ bool TileMap::load(
     unsigned int height
     ) {
     // load the tileset texture
-    if (!m_tileset.loadFromFile(tileset)) {
+    if (!_tileset.loadFromFile(tileset)) {
         return false;
     }
 
     // resize the vertex array to fit the level size
-    m_vertices.setPrimitiveType(sf::Triangles);
-    m_vertices.resize(width * height * 6);
+    _vertices.setPrimitiveType(sf::Triangles);
+    _vertices.resize(width * height * 6);
 
     // populate the vertex array, with two triangles per tile
     for (unsigned int i = 0; i < width; ++i)
@@ -26,11 +26,11 @@ bool TileMap::load(
             int tileNumber = tiles[i + j * width];
 
             // find its position in the tileset texture
-            int tu = tileNumber % (m_tileset.getSize().x / tileSize.x);
-            int tv = tileNumber / (m_tileset.getSize().x / tileSize.x);
+            int tu = tileNumber % (_tileset.getSize().x / tileSize.x);
+            int tv = tileNumber / (_tileset.getSize().x / tileSize.x);
 
             // get a pointer to the triangles' vertices of the current tile
-            sf::Vertex* triangles = &m_vertices[(i + j * width) * 6];
+            sf::Vertex* triangles = &_vertices[(i + j * width) * 6];
 
             // define the 6 corners of the two triangles
             triangles[0].position = sf::Vector2f(i * tileSize.x, j * tileSize.y);

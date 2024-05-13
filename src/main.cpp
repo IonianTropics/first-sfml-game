@@ -1,4 +1,6 @@
+#include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
+#include <SFML/System/Clock.hpp>
 
 #include "Knight.h"
 #include "TileMap.h"
@@ -6,7 +8,7 @@
 
 int main() {
     auto window = sf::RenderWindow{ { 512u, 256u }, "First Game" };
-    window.setFramerateLimit(60);
+    window.setFramerateLimit(144);
 
     const int background[] = {
         144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144,
@@ -34,19 +36,23 @@ int main() {
             background, 
             32, 16)
         ) {
-        return -1;
+        return EXIT_FAILURE;
     }
 
-    sf::Texture knight_texture;
-    if (!knight_texture.loadFromFile("../../../assets/sprites/knight.png")) {
-        return -1;
+    game::Knight knight;
+    if (!knight.load()) {
+        return EXIT_FAILURE;
     }
 
-    sf::Sprite knight;
-    knight.setTexture(knight_texture);
-    knight.setTextureRect(sf::IntRect(0, 0, 31, 31));
-    sf::Vector2f knight_velocity = sf::Vector2f();
-    float knight_speed = 1.5f;
+    sf::Music music;
+    if (!music.openFromFile("../../../assets/music/time_for_adventure.mp3")) {
+        return EXIT_FAILURE;
+    }
+    music.setLoop(true);
+    music.play();
+
+    sf::Clock clock;
+    float delta;
 
     while (window.isOpen()) {
         for (auto event = sf::Event{}; window.pollEvent(event);) {
@@ -54,30 +60,17 @@ int main() {
                 window.close();
             }
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-            knight_velocity.y -= knight_speed;
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-            knight_velocity.x -= knight_speed;
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-            knight_velocity.y += knight_speed;
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-            knight_velocity.x += knight_speed;
-        }
+        knight.update_input();
 
-        knight.move(knight_velocity);
-        if (knight_velocity.x < 0.f) {
-            knight.setTextureRect(sf::IntRect(31, 0, -31, 31));
-        } else if (knight_velocity.x > 0.f) {
-            knight.setTextureRect(sf::IntRect(0, 0, 31, 31));
-        }
-        knight_velocity = sf::Vector2f();
+        delta = clock.getElapsedTime().asSeconds();
+        knight.update_physics(delta);
+        clock.restart();
+        knight.update_graphics();
 
         window.clear();
         window.draw(background_map);
         window.draw(knight);
         window.display();
     }
+    return EXIT_SUCCESS;
 }

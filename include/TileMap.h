@@ -19,13 +19,13 @@ class TileMap: public sf::Drawable, public sf::Transformable {
             states.transform *= getTransform();
 
             // apply the tileset texture
-            states.texture = &m_tileset;
+            states.texture = &_tileset;
 
             // draw the vertex array
-            target.draw(m_vertices, states);
+            target.draw(_vertices, states);
         }
-        sf::VertexArray m_vertices;
-        sf::Texture m_tileset;
+        sf::VertexArray _vertices;
+        sf::Texture _tileset;
 };
 } // namespace game
 
