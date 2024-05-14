@@ -20,11 +20,11 @@ bool Knight::load() {
     _space_just_pressed = false;
     _space_just_released = false;
 
-    _collision_rect = sf::FloatRect(12.f, 13.f, 8.f, 13.f);
+    _collision_rect = sf::FloatRect(12.f, 14.f, 8.f, 13.f);
     _velocity = sf::Vector2f();
     _max_speed = 100.f;
     _acceleration = 1000.f;
-    _gravity = 120.f;
+    _gravity = 150.f;
     _jump_impulse = 120.f;
     _terminal_velocity = 120.f;
     return true;
@@ -81,20 +81,31 @@ void Knight::update_physics(float delta, sf::FloatRect world_rects[], int world_
         }
     }
 
-    // TODO add move and slide
-    // TODO add directional collision checks
     this->move(delta * _velocity);
-    sf::FloatRect collision_rect = get_global_bounds();
+    sf::FloatRect hitbox = get_global_bounds();
     sf::FloatRect intersection = sf::FloatRect();
     bool collision = false;
     for (int i = 0; i < world_rect_count; i++) {
-        if (collision_rect.intersects(world_rects[i], intersection)) {
-            collision = true;
+        if (hitbox.intersects(world_rects[i], intersection)) {
+            if (intersection.width < intersection.height) {
+                if (intersection.left > hitbox.left) {
+                    this->move(sf::Vector2f(-intersection.width, 0.f));
+                    _velocity.x = 0.f;
+                } else {
+                    this->move(sf::Vector2f(intersection.width, 0.f));
+                    _velocity.x = 0.f;
+                }
+            } else {
+                if (intersection.top > hitbox.top) {
+                    this->move(sf::Vector2f(0.f, -intersection.height));
+                    _velocity.y = 0.f;
+                    // TODO: add on_ground state
+                } else {
+                    this->move(sf::Vector2f(0.f, intersection.height));
+                    _velocity.y = 0.f;
+                }
+            }
         }
-    }
-    if (collision) {
-        this->move(-delta * _velocity);
-        _velocity = sf::Vector2f();
     }
 }
 
