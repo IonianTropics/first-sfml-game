@@ -24,13 +24,18 @@ bool Knight::load() {
     _velocity = sf::Vector2f();
     _max_speed = 100.f;
     _acceleration = 1000.f;
-    _gravity = 150.f;
-    _jump_impulse = 120.f;
-    _terminal_velocity = 120.f;
+    _gravity = 180.f;
+    _jump_impulse = 110.f;
+    _terminal_velocity = 150.f;
+    _on_ground = false;
+
+    _animation_speed = 0.1f;
+
     return true;
 }
 
 void Knight::update_input() {
+    // TODO: add roll
     _direction = 0.f;
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
         _direction -= 1.f;
@@ -56,12 +61,13 @@ void Knight::update_input() {
 }
 
 void Knight::update_physics(float delta, sf::FloatRect world_rects[], int world_rect_count) {
-    // TODO: add ground check
     _velocity.y += delta * _gravity;
     _velocity.y = std::min(_velocity.y, _terminal_velocity);
 
-    if (_space_just_pressed) {
+    // TODO: improve jump
+    if (_space_just_pressed && _on_ground) {
         _velocity.y = -_jump_impulse;
+        _on_ground = false;
     }
 
     if (_direction) {
@@ -81,10 +87,15 @@ void Knight::update_physics(float delta, sf::FloatRect world_rects[], int world_
         }
     }
 
+    move_and_slide(delta, world_rect_count, world_rects);
+}
+
+void Knight::move_and_slide(float delta, int world_rect_count, sf::FloatRect world_rects[]) {
     this->move(delta * _velocity);
     sf::FloatRect hitbox = get_global_bounds();
     sf::FloatRect intersection = sf::FloatRect();
     bool collision = false;
+    _on_ground = false;
     for (int i = 0; i < world_rect_count; i++) {
         if (hitbox.intersects(world_rects[i], intersection)) {
             if (intersection.width < intersection.height) {
@@ -99,7 +110,7 @@ void Knight::update_physics(float delta, sf::FloatRect world_rects[], int world_
                 if (intersection.top > hitbox.top) {
                     this->move(sf::Vector2f(0.f, -intersection.height));
                     _velocity.y = 0.f;
-                    // TODO: add on_ground state
+                    _on_ground = true;
                 } else {
                     this->move(sf::Vector2f(0.f, intersection.height));
                     _velocity.y = 0.f;
@@ -114,6 +125,14 @@ void Knight::update_graphics() {
         _animated_sprite.flip_h = true;
     } else if (_velocity.x > 0.f) {
         _animated_sprite.flip_h = false;
+    }
+    if (std::abs(_velocity.x) > 0.5f) {
+        _animated_sprite.set_animation(16, 16, _animation_speed);
+    } else {
+        _animated_sprite.set_animation(0, 4, _animation_speed);
+    }
+    if (!_on_ground) {
+        _animated_sprite.set_animation(16, 1, _animation_speed);
     }
     _animated_sprite.update();
 }
