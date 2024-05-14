@@ -51,4 +51,10 @@ bool TileMap::load(
 
     return true;
 }
+
+void TileMap::draw(sf::RenderTarget &target, sf::RenderStates states) const {
+    states.transform *= getTransform();
+    states.texture = &_tileset;
+    target.draw(_vertices, states);
+}
 } // namespace game
