@@ -32,6 +32,8 @@ class Knight: public sf::Drawable, public sf::Transformable {
         sf::Vector2f _velocity;
         float _max_speed;
         float _acceleration;
+        float _max_air_speed;
+        float _air_acceleration;
         float _gravity;
         float _jump_impulse;
         float _terminal_velocity;

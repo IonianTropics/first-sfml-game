@@ -24,9 +24,12 @@ bool Knight::load() {
     _velocity = sf::Vector2f();
     _max_speed = 100.f;
     _acceleration = 1000.f;
-    _gravity = 180.f;
-    _jump_impulse = 110.f;
-    _terminal_velocity = 150.f;
+
+    _max_air_speed = 80.f;
+    _air_acceleration = 600.f;
+    _gravity = 240.f;
+    _jump_impulse = 150.f;
+    _terminal_velocity = 400.f;
     _on_ground = false;
 
     _animation_speed = 0.1f;
@@ -37,6 +40,10 @@ bool Knight::load() {
 void Knight::update_input() {
     // TODO: add roll
     _direction = 0.f;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
+        setPosition(sf::Vector2f());
+        _velocity = sf::Vector2f();
+    }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
         _direction -= 1.f;
     }
@@ -64,26 +71,48 @@ void Knight::update_physics(float delta, sf::FloatRect world_rects[], int world_
     _velocity.y += delta * _gravity;
     _velocity.y = std::min(_velocity.y, _terminal_velocity);
 
-    // TODO: improve jump
     if (_space_just_pressed && _on_ground) {
         _velocity.y = -_jump_impulse;
         _on_ground = false;
+        _gravity = 240.f;
+    }
+    if (_space_just_released && !_on_ground) {
+        _gravity = 360.f;
     }
 
-    if (_direction) {
-        _velocity.x += delta * _acceleration * _direction;
-        if (_velocity.x > 0.f) {
-            _velocity.x = std::min(_velocity.x, _max_speed);
-        } else if (_velocity.x < 0.f) {
-            _velocity.x = std::max(_velocity.x, -_max_speed);
+    if (_on_ground) {
+        if (_direction) {
+            _velocity.x += delta * _acceleration * _direction;
+            if (_velocity.x > 0.f) {
+                _velocity.x = std::min(_velocity.x, _max_speed);
+            } else if (_velocity.x < 0.f) {
+                _velocity.x = std::max(_velocity.x, -_max_speed);
+            }
+        } else {
+            if (_velocity.x > 0.f) {
+                _velocity.x -= delta * _acceleration;
+                _velocity.x = std::max(_velocity.x, 0.f);
+            } else if (_velocity.x < 0.f) {
+                _velocity.x += delta * _acceleration;
+                _velocity.x = std::min(_velocity.x, 0.f);
+            }
         }
     } else {
-        if (_velocity.x > 0.f) {
-            _velocity.x -= delta * _acceleration;
-            _velocity.x = std::max(_velocity.x, 0.f);
-        } else if (_velocity.x < 0.f) {
-            _velocity.x += delta * _acceleration;
-            _velocity.x = std::min(_velocity.x, 0.f);
+        if (_direction) {
+            _velocity.x += delta * _air_acceleration * _direction;
+            if (_velocity.x > 0.f) {
+                _velocity.x = std::min(_velocity.x, _max_air_speed);
+            } else if (_velocity.x < 0.f) {
+                _velocity.x = std::max(_velocity.x, -_max_air_speed);
+            }
+        } else {
+            if (_velocity.x > 0.f) {
+                _velocity.x -= delta * _air_acceleration;
+                _velocity.x = std::max(_velocity.x, 0.f);
+            } else if (_velocity.x < 0.f) {
+                _velocity.x += delta * _air_acceleration;
+                _velocity.x = std::min(_velocity.x, 0.f);
+            }
         }
     }
 
@@ -91,7 +120,7 @@ void Knight::update_physics(float delta, sf::FloatRect world_rects[], int world_
 }
 
 void Knight::move_and_slide(float delta, int world_rect_count, sf::FloatRect world_rects[]) {
-    this->move(delta * _velocity);
+    move(delta * _velocity);
     sf::FloatRect hitbox = get_global_bounds();
     sf::FloatRect intersection = sf::FloatRect();
     bool collision = false;
@@ -100,20 +129,20 @@ void Knight::move_and_slide(float delta, int world_rect_count, sf::FloatRect wor
         if (hitbox.intersects(world_rects[i], intersection)) {
             if (intersection.width < intersection.height) {
                 if (intersection.left > hitbox.left) {
-                    this->move(sf::Vector2f(-intersection.width, 0.f));
-                    _velocity.x = 0.f;
+                    move(sf::Vector2f(-intersection.width, 0.f));
+                    _velocity.x = std::max(0.f, _velocity.x);
                 } else {
-                    this->move(sf::Vector2f(intersection.width, 0.f));
-                    _velocity.x = 0.f;
+                    move(sf::Vector2f(intersection.width, 0.f));
+                    _velocity.x = std::min(0.f, _velocity.x);
                 }
             } else {
                 if (intersection.top > hitbox.top) {
-                    this->move(sf::Vector2f(0.f, -intersection.height));
-                    _velocity.y = 0.f;
+                    move(sf::Vector2f(0.f, -intersection.height));
+                    _velocity.y = std::min(0.f, _velocity.y);
                     _on_ground = true;
                 } else {
-                    this->move(sf::Vector2f(0.f, intersection.height));
-                    _velocity.y = 0.f;
+                    move(sf::Vector2f(0.f, intersection.height));
+                    _velocity.y = std::max(0.f, _velocity.y);
                 }
             }
         }
