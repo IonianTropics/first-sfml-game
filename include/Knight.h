@@ -8,7 +8,6 @@
 
 namespace game {
 class Knight: public sf::Drawable, public sf::Transformable {
-    // TODO: add sound update
     public:
         bool load();
 
