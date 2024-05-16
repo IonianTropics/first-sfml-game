@@ -15,6 +15,20 @@ bool Knight::load() {
         return false;
     }
 
+    if (!_jump_sound_buffer.loadFromFile("../../../assets/sounds/jump.wav")) {
+        return false;
+    }
+
+    _jump_sound.setBuffer(_jump_sound_buffer);
+
+    if (!_tap_sound_buffer.loadFromFile("../../../assets/sounds/tap.wav")) {
+        return false;
+    }
+
+    _tap_sound.setBuffer(_tap_sound_buffer);
+    _tap_sound_clock.restart();
+    _tap_sound_pause = 0.4f;
+
     _direction = 0.f;
     _space_held = false;
     _space_just_pressed = false;
@@ -73,6 +87,7 @@ void Knight::update_physics(float delta, const sf::FloatRect world_rects[], int 
 
     if (_on_ground) {
         if (_space_just_pressed) {
+            _jump_sound.play();
             _velocity.y = -_jump_impulse;
             _on_ground = false;
             _gravity = 300.f;
@@ -156,13 +171,18 @@ void Knight::update_graphics() {
     } else if (_velocity.x > 0.f) {
         _animated_sprite.flip_h = false;
     }
-    if (std::abs(_velocity.x) > 0.5f) {
-        _animated_sprite.set_animation(16, 16, _animation_speed);
-    } else {
-        _animated_sprite.set_animation(0, 4, _animation_speed);
-    }
     if (!_on_ground) {
         _animated_sprite.set_animation(16, 1, _animation_speed);
+    } else {
+        if (std::abs(_velocity.x) > 0.5f) {
+            _animated_sprite.set_animation(16, 16, _animation_speed);
+            if (_tap_sound_clock.getElapsedTime().asSeconds() > _tap_sound_pause) {
+                _tap_sound.play();
+                _tap_sound_clock.restart();
+            }
+        } else {
+            _animated_sprite.set_animation(0, 4, _animation_speed);
+        }
     }
     _animated_sprite.update();
 }

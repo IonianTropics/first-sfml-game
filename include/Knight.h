@@ -1,6 +1,7 @@
 #ifndef GAME_KNIGHT_H_
 #define GAME_KNIGHT_H_
 
+#include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 
 #include "AnimatedSprite.h"
@@ -41,6 +42,13 @@ class Knight: public sf::Drawable, public sf::Transformable {
 
         AnimatedSprite _animated_sprite;
         float _animation_speed;
+
+        sf::Sound _jump_sound;
+        sf::SoundBuffer _jump_sound_buffer;
+        sf::Sound _tap_sound;
+        sf::SoundBuffer _tap_sound_buffer;
+        sf::Clock _tap_sound_clock;
+        float _tap_sound_pause;
 
         virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 };
