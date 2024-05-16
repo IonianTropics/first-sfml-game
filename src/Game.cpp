@@ -24,6 +24,12 @@ Game::Game() {
         exit(EXIT_FAILURE);
     }
 
+    if (!_platform.load(2, 3)) {
+        exit(EXIT_FAILURE);
+    }
+    _platform.setPosition(196.f, 208.f);
+    _world_rects[10] = _platform.get_global_bounds();
+
     if (!_knight.load()) {
         exit(EXIT_FAILURE);
     }
@@ -61,8 +67,10 @@ void Game::run() {
         _window.setView(_window.getDefaultView());
         _window.clear();
         _window.draw(_background);
-        _window.setView(_knight.camera);
+        
+        // _window.setView(_knight.camera);
         _window.draw(_world);
+        _window.draw(_platform);
         _window.draw(_knight);
         _window.display();
     }

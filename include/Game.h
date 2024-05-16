@@ -7,6 +7,7 @@
 
 #include "TileMap.h"
 #include "Knight.h"
+#include "Platform.h"
 
 namespace game {
 
@@ -30,12 +31,9 @@ class Game {
 
         game::TileMap _background;
         game::TileMap _world;
-        static const int _world_rect_count = 10;
-        const sf::FloatRect _world_rects[_world_rect_count] = {
-            // 1, 11 to 3, 11
-            // 5, 9 to 6, 9
-            // 8, 9 to 7, 9
-            // 0, 15 to 31, 15
+        Platform _platform;
+        static const int _world_rect_count = 11;
+        sf::FloatRect _world_rects[_world_rect_count] = {
             sf::FloatRect(16.f, 176.f, 48.f, 16.f),
             sf::FloatRect(80.f, 144.f, 32.f, 16.f),
             sf::FloatRect(128.f, 144.f, 32.f, 16.f),
@@ -46,6 +44,7 @@ class Game {
             sf::FloatRect(464.f, 224.f, 16.f, 16.f),
             sf::FloatRect(400.f, 192.f, 16.f, 16.f),
             sf::FloatRect(416.f, 192.f, 16.f, 16.f),
+            _platform.get_global_bounds()
         };
         const int _background_data[512] = {
             144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144, 144,
