@@ -3,7 +3,7 @@
 #include <algorithm>
 
 namespace game {
-
+// public
 bool Knight::load() {
     if (!_animated_sprite.load(
         "../../../assets/sprites/knight.png",
@@ -67,7 +67,7 @@ void Knight::update_input() {
     }
 }
 
-void Knight::update_physics(float delta, sf::FloatRect world_rects[], int world_rect_count) {
+void Knight::update_physics(float delta, const sf::FloatRect world_rects[], int world_rect_count) {
     _velocity.y += delta * _gravity;
     _velocity.y = std::min(_velocity.y, _terminal_velocity);
 
@@ -77,7 +77,7 @@ void Knight::update_physics(float delta, sf::FloatRect world_rects[], int world_
         _gravity = 240.f;
     }
     if (_space_just_released && !_on_ground) {
-        _gravity = 360.f;
+        _gravity = 480.f;
     }
 
     if (_on_ground) {
@@ -116,10 +116,10 @@ void Knight::update_physics(float delta, sf::FloatRect world_rects[], int world_
         }
     }
 
-    move_and_slide(delta, world_rect_count, world_rects);
+    move_and_slide(delta, world_rects, world_rect_count);
 }
 
-void Knight::move_and_slide(float delta, int world_rect_count, sf::FloatRect world_rects[]) {
+void Knight::move_and_slide(float delta, const sf::FloatRect world_rects[], int world_rect_count) {
     move(delta * _velocity);
     sf::FloatRect hitbox = get_global_bounds();
     sf::FloatRect intersection = sf::FloatRect();

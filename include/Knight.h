@@ -12,9 +12,9 @@ class Knight: public sf::Drawable, public sf::Transformable {
 
         void update_input();
 
-        void update_physics(float delta, sf::FloatRect world_rects[], int world_rect_count);
+        void update_physics(float delta, const sf::FloatRect world_rects[], int world_rect_count);
 
-        void move_and_slide(float delta, int world_rect_count, sf::FloatRect world_rects[]);
+        void move_and_slide(float delta, const sf::FloatRect world_rects[], int world_rect_count);
 
         void update_graphics();
 
