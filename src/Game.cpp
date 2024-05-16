@@ -64,11 +64,10 @@ void Game::run() {
         _knight.update_sound();
         _knight.update_graphics();
         
-        _window.setView(_window.getDefaultView());
         _window.clear();
+        _window.setView(_window.getDefaultView());
         _window.draw(_background);
-        
-        // _window.setView(_knight.camera);
+        _window.setView(_knight.camera);
         _window.draw(_world);
         _window.draw(_platform);
         _window.draw(_knight);
