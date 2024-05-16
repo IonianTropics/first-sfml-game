@@ -13,7 +13,8 @@ namespace game {
 #define WIDTH 512u
 #define HEIGHT 256u
 #define TITLE "First Game"
-#define FRAMERATE 60u
+#define FRAMERATE 144u
+#define VSYNC true
 #define SECONDS_PER_UPDATE 1.f / 144.f
 
 class Game {

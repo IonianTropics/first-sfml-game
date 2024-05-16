@@ -4,6 +4,7 @@ namespace game {
 Game::Game() {
     _window.create(sf::VideoMode(WIDTH, HEIGHT), TITLE);
     _window.setFramerateLimit(FRAMERATE);
+    _window.setVerticalSyncEnabled(VSYNC);
 
     if (!_background.load(
             "../../../assets/sprites/world_tileset.png",
@@ -31,7 +32,6 @@ Game::Game() {
         exit(EXIT_FAILURE);
     }
     _music.setLoop(true);
-    _music.setVolume(1.f);
 }
 
 void Game::run() {
