@@ -1,5 +1,4 @@
 #include "AnimatedSprite.h"
-#include <iostream>
 
 namespace game {
 bool AnimatedSprite::load(
