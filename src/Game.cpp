@@ -48,13 +48,15 @@ void Game::run() {
                 _window.close();
             }
         }
-        _knight.update_input();
+        
 
         while (lag > SECONDS_PER_UPDATE) {
+            _knight.update_input();
             _knight.update_physics(SECONDS_PER_UPDATE, _world_rects, _world_rect_count);
             lag -= SECONDS_PER_UPDATE;
         }
         
+        _knight.update_sound();
         _knight.update_graphics();
         _window.clear();
         _window.draw(_background);

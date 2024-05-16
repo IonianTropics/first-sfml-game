@@ -8,6 +8,7 @@
 
 namespace game {
 class Knight: public sf::Drawable, public sf::Transformable {
+    // TODO: add sound update
     public:
         bool load();
 
@@ -15,9 +16,11 @@ class Knight: public sf::Drawable, public sf::Transformable {
 
         void update_physics(float delta, const sf::FloatRect world_rects[], int world_rect_count);
 
-        void move_and_slide(float delta, const sf::FloatRect world_rects[], int world_rect_count);
-
         void update_graphics();
+
+        void update_sound();
+
+        void move_and_slide(float delta, const sf::FloatRect world_rects[], int world_rect_count);
 
         sf::FloatRect get_local_bounds();
 

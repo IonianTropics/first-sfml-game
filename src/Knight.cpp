@@ -111,7 +111,6 @@ void Knight::update_physics(float delta, const sf::FloatRect world_rects[], int 
             }
         }
     } else {
-        
         if (_space_just_released) {
             _gravity = 600.f;
         }
@@ -134,6 +133,39 @@ void Knight::update_physics(float delta, const sf::FloatRect world_rects[], int 
     }
 
     move_and_slide(delta, world_rects, world_rect_count);
+}
+
+void Knight::update_graphics() {
+    if (_velocity.x < 0.f) {
+        _animated_sprite.flip_h = true;
+    } else if (_velocity.x > 0.f) {
+        _animated_sprite.flip_h = false;
+    }
+    if (!_on_ground) {
+        _animated_sprite.set_animation(16, 1, _animation_speed);
+    } else {
+        if (std::abs(_velocity.x) > 0.5f) {
+            _animated_sprite.set_animation(16, 16, _animation_speed);
+            
+        } else {
+            _animated_sprite.set_animation(0, 4, _animation_speed);
+        }
+    }
+    _animated_sprite.update();
+}
+
+void Knight::update_sound() {
+    if (_on_ground) {
+        if (std::abs(_velocity.x) > 0.5f) {
+            if (_tap_sound_clock.getElapsedTime().asSeconds() > _tap_sound_pause) {
+                _tap_sound.play();
+                _tap_sound_clock.restart();
+            }
+        }
+        if (_space_just_pressed) {
+            _jump_sound.play();
+        }
+    }
 }
 
 void Knight::move_and_slide(float delta, const sf::FloatRect world_rects[], int world_rect_count) {
@@ -163,28 +195,6 @@ void Knight::move_and_slide(float delta, const sf::FloatRect world_rects[], int 
             }
         }
     }
-}
-
-void Knight::update_graphics() {
-    if (_velocity.x < 0.f) {
-        _animated_sprite.flip_h = true;
-    } else if (_velocity.x > 0.f) {
-        _animated_sprite.flip_h = false;
-    }
-    if (!_on_ground) {
-        _animated_sprite.set_animation(16, 1, _animation_speed);
-    } else {
-        if (std::abs(_velocity.x) > 0.5f) {
-            _animated_sprite.set_animation(16, 16, _animation_speed);
-            if (_tap_sound_clock.getElapsedTime().asSeconds() > _tap_sound_pause) {
-                _tap_sound.play();
-                _tap_sound_clock.restart();
-            }
-        } else {
-            _animated_sprite.set_animation(0, 4, _animation_speed);
-        }
-    }
-    _animated_sprite.update();
 }
 
 sf::FloatRect Knight::get_local_bounds() {
