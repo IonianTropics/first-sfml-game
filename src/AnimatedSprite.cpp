@@ -12,7 +12,7 @@ bool AnimatedSprite::load(
     int frame_count,
     float frame_duration
 ) {
-    if (!_sprite_sheet.loadFromFile("../../../assets/sprites/knight.png")) {
+    if (!_sprite_sheet.loadFromFile(sprite_sheet_path)) {
         return false;
     }
     _sprite.setTexture(_sprite_sheet);
