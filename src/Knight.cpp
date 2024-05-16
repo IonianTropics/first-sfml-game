@@ -20,15 +20,15 @@ bool Knight::load() {
     _space_just_pressed = false;
     _space_just_released = false;
 
-    _collision_rect = sf::FloatRect(12.f, 14.f, 8.f, 13.f);
+    _collision_rect = sf::FloatRect(13.f, 17.f, 6.f, 10.f);
     _velocity = sf::Vector2f();
-    _max_speed = 100.f;
-    _acceleration = 1000.f;
+    _max_speed = 90.f;
+    _acceleration = 1080.f;
 
-    _max_air_speed = 80.f;
-    _air_acceleration = 600.f;
+    _max_air_speed = 75.f;
+    _air_acceleration = 720.f;
     _gravity = 240.f;
-    _jump_impulse = 150.f;
+    _jump_impulse = 160.f;
     _terminal_velocity = 400.f;
     _on_ground = false;
 
@@ -74,10 +74,10 @@ void Knight::update_physics(float delta, const sf::FloatRect world_rects[], int 
     if (_space_just_pressed && _on_ground) {
         _velocity.y = -_jump_impulse;
         _on_ground = false;
-        _gravity = 240.f;
+        _gravity = 300.f;
     }
     if (_space_just_released && !_on_ground) {
-        _gravity = 480.f;
+        _gravity = 600.f;
     }
 
     if (_on_ground) {

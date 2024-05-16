@@ -2,9 +2,7 @@
 
 int main() {
     game::Game game;
-    sf::RenderWindow window = sf::RenderWindow{ { 512u, 256u }, "First Game" };
-    window.setFramerateLimit(60);
-    game.run(&window);
+    game.run();
     
     return EXIT_SUCCESS;
 }

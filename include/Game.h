@@ -9,11 +9,19 @@
 #include "Knight.h"
 
 namespace game {
+
+#define WIDTH 512u
+#define HEIGHT 256u
+#define TITLE "First Game"
+#define FRAMERATE 60u
+#define SECONDS_PER_UPDATE 1.f / 144.f
+
 class Game {
     public:
         Game();
-        void run(sf::RenderWindow* window);
+        void run();
     private:
+        sf::RenderWindow _window;
         game::Knight _knight;
         sf::Music _music;
         sf::Clock _clock;

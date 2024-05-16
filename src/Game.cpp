@@ -1,8 +1,10 @@
 #include "Game.h"
 
 namespace game {
-// public
 Game::Game() {
+    _window.create(sf::VideoMode(WIDTH, HEIGHT), TITLE);
+    _window.setFramerateLimit(FRAMERATE);
+
     if (!_background.load(
             "../../../assets/sprites/world_tileset.png",
             sf::Vector2u(16, 16),
@@ -20,6 +22,7 @@ Game::Game() {
         ) {
         exit(EXIT_FAILURE);
     }
+
     if (!_knight.load()) {
         exit(EXIT_FAILURE);
     }
@@ -31,28 +34,33 @@ Game::Game() {
     _music.setVolume(1.f);
 }
 
-void Game::run(sf::RenderWindow* window) {
+void Game::run() {
+    float lag = 0.f;
     _music.play();
+    _clock.restart();
 
-    while (window->isOpen()) {
-        for (auto event = sf::Event{}; window->pollEvent(event);) {
+    while (_window.isOpen()) {
+        lag += _clock.getElapsedTime().asSeconds();
+        _clock.restart();
+
+        for (sf::Event event; _window.pollEvent(event);) {
             if (event.type == sf::Event::Closed) {
-                window->close();
+                _window.close();
             }
         }
         _knight.update_input();
 
-        _delta = _clock.getElapsedTime().asSeconds();
-        _knight.update_physics(_delta, _world_rects, _world_rect_count);
-        _clock.restart();
-
+        while (lag > SECONDS_PER_UPDATE) {
+            _knight.update_physics(SECONDS_PER_UPDATE, _world_rects, _world_rect_count);
+            lag -= SECONDS_PER_UPDATE;
+        }
+        
         _knight.update_graphics();
-
-        window->clear();
-        window->draw(_background);
-        window->draw(_world);
-        window->draw(_knight);
-        window->display();
+        _window.clear();
+        _window.draw(_background);
+        _window.draw(_world);
+        _window.draw(_knight);
+        _window.display();
     }
 }
 } // namespace game
