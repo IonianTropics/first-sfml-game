@@ -25,6 +25,7 @@ class Knight: public sf::Drawable, public sf::Transformable {
 
         sf::FloatRect get_global_bounds();
 
+        sf::View camera;
     private:
         float _direction;
         bool _space_held;

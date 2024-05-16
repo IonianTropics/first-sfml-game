@@ -36,10 +36,10 @@ bool Knight::load() {
 
     _collision_rect = sf::FloatRect(13.f, 18.f, 6.f, 9.f);
     _velocity = sf::Vector2f();
-    _max_speed = 90.f;
+    _max_speed = 120.f;
     _acceleration = 1080.f;
 
-    _max_air_speed = 75.f;
+    _max_air_speed = 90.f;
     _air_acceleration = 720.f;
     _gravity = 240.f;
     _jump_impulse = 160.f;
@@ -47,6 +47,7 @@ bool Knight::load() {
     _on_ground = false;
 
     _animation_speed = 0.1f;
+    camera = sf::View(this->getPosition(), sf::Vector2f(512u, 256u));
 
     return true;
 }
@@ -144,14 +145,14 @@ void Knight::update_graphics() {
     if (!_on_ground) {
         _animated_sprite.set_animation(16, 1, _animation_speed);
     } else {
-        if (std::abs(_velocity.x) > 0.5f) {
+        if (std::abs(_velocity.x) > 1.f) {
             _animated_sprite.set_animation(16, 16, _animation_speed);
-            
         } else {
             _animated_sprite.set_animation(0, 4, _animation_speed);
         }
     }
     _animated_sprite.update();
+    camera.setCenter(getPosition());
 }
 
 void Knight::update_sound() {

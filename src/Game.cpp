@@ -49,7 +49,6 @@ void Game::run() {
             }
         }
         
-
         while (lag > SECONDS_PER_UPDATE) {
             _knight.update_input();
             _knight.update_physics(SECONDS_PER_UPDATE, _world_rects, _world_rect_count);
@@ -58,8 +57,11 @@ void Game::run() {
         
         _knight.update_sound();
         _knight.update_graphics();
+        
+        _window.setView(_window.getDefaultView());
         _window.clear();
         _window.draw(_background);
+        _window.setView(_knight.camera);
         _window.draw(_world);
         _window.draw(_knight);
         _window.display();

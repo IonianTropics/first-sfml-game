@@ -13,7 +13,7 @@ namespace game {
 #define WIDTH 512u
 #define HEIGHT 256u
 #define TITLE "First Game"
-#define FRAMERATE 144u
+#define FRAMERATE 500u
 #define VSYNC true
 #define SECONDS_PER_UPDATE 1.f / 144.f
 
