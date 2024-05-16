@@ -20,7 +20,7 @@ bool Knight::load() {
     _space_just_pressed = false;
     _space_just_released = false;
 
-    _collision_rect = sf::FloatRect(13.f, 17.f, 6.f, 10.f);
+    _collision_rect = sf::FloatRect(13.f, 18.f, 6.f, 9.f);
     _velocity = sf::Vector2f();
     _max_speed = 90.f;
     _acceleration = 1080.f;
@@ -71,16 +71,14 @@ void Knight::update_physics(float delta, const sf::FloatRect world_rects[], int 
     _velocity.y += delta * _gravity;
     _velocity.y = std::min(_velocity.y, _terminal_velocity);
 
-    if (_space_just_pressed && _on_ground) {
-        _velocity.y = -_jump_impulse;
-        _on_ground = false;
-        _gravity = 300.f;
-    }
-    if (_space_just_released && !_on_ground) {
-        _gravity = 600.f;
-    }
-
     if (_on_ground) {
+        if (_space_just_pressed) {
+            _velocity.y = -_jump_impulse;
+            _on_ground = false;
+            _gravity = 300.f;
+        } else {
+            _gravity = 600.f;
+        }
         if (_direction) {
             _velocity.x += delta * _acceleration * _direction;
             if (_velocity.x > 0.f) {
@@ -98,6 +96,10 @@ void Knight::update_physics(float delta, const sf::FloatRect world_rects[], int 
             }
         }
     } else {
+        
+        if (_space_just_released) {
+            _gravity = 600.f;
+        }
         if (_direction) {
             _velocity.x += delta * _air_acceleration * _direction;
             if (_velocity.x > 0.f) {
@@ -123,7 +125,6 @@ void Knight::move_and_slide(float delta, const sf::FloatRect world_rects[], int 
     move(delta * _velocity);
     sf::FloatRect hitbox = get_global_bounds();
     sf::FloatRect intersection = sf::FloatRect();
-    bool collision = false;
     _on_ground = false;
     for (int i = 0; i < world_rect_count; i++) {
         if (hitbox.intersects(world_rects[i], intersection)) {
